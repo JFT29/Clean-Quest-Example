@@ -20,15 +20,15 @@ You also need to improve the code quality by refactoring the current code.
 
 1.  Run the tests: `QuestServiceTest` currently passes, but notice it *expects* the bug in the Escort quest (10000 gold instead of 1000).
 2.  Identify Smells:
-    - Unit Size: ?
-    - Complexity: ?
-    - Persistence: ?
-    - DIP Violation: ?
-    - Controller SRP Violation: ?
+    - Unit Size: Large method in `QuestServiceImpl` handling both logic and I/O.
+    - Complexity: Nested `if-else` chains for quest types (OCP violation).
+    - Persistence: Hardcoded file writing inside the service layer.
+    - DIP Violation: Service depends on concrete `FileWriter` instead of abstraction.
+    - Controller SRP Violation: Controller performing business logic checks.
 3.  Improve the codebase:
-    - Update the test to reflect the correct requirement
-    - Fix the code
-    - Refactor
+    - Update the test to reflect the correct requirement: Fixed `QuestServiceTest` to expect 1000 gold.
+    - Fix the code: Corrected multiplier in `EscortQuestProcessor`.
+    - Refactor: Applied Strategy (Processors) and Repository patterns to follow SOLID principles.
 
 ## Generative AI Use Disclosure
 

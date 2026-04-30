@@ -31,8 +31,8 @@ class QuestControllerTest {
     @Test
     void testProcessQuestSuccess() throws Exception {
         Quest quest = new Quest("Dragon Slayer", "KILL", 5, 100);
-        
-        when(questService.processQuestLogic(anyString(), anyString(), anyInt(), anyInt()))
+
+        when(questService.processQuest(any(Quest.class)))
             .thenReturn(500);
 
         mockMvc.perform(post("/api/quests/process")
@@ -45,8 +45,8 @@ class QuestControllerTest {
     @Test
     void testProcessQuestFailure() throws Exception {
         Quest quest = new Quest("Find Cat", "FETCH", 1, 0);
-        
-        when(questService.processQuestLogic(anyString(), anyString(), anyInt(), anyInt()))
+
+        when(questService.processQuest(any(Quest.class)))
             .thenReturn(0);
 
         mockMvc.perform(post("/api/quests/process")
@@ -54,5 +54,16 @@ class QuestControllerTest {
                 .content(objectMapper.writeValueAsString(quest)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("FAILED: Not done yet."));
+    }
+
+    @Test
+    void testProcessQuestMissingType() throws Exception {
+        Quest quest = new Quest("No Type", null, 1, 0);
+
+        mockMvc.perform(post("/api/quests/process")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(quest)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("ERROR: Quest type is missing!"));
     }
 }
